@@ -1,4 +1,14 @@
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import bao.example.AccountService;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 class AccountServiceTest {
+
     private AccountService accountService;
 
     @BeforeEach
@@ -6,40 +16,59 @@ class AccountServiceTest {
         accountService = new AccountService();
     }
 
-    @ParameterizedTest
-    @CsvFileSource(resources = "/test-data.csv", numLinesToSkip = 1)
-    void testRegisterAccount(String username, String password, String email, boolean expected) {
-        boolean result = accountService.registerAccount(username, password, email);
-        assertEquals(expected, result,
-                String.format("Registration failed for username: %s, password: %s, email: %s",
-                        username, password, email));
-    }
-
     @Test
-    void testIsValidEmail_ValidEmail() {
+    @DisplayName("isValidEmail returns true for valid email")
+    void testValidEmail() {
         assertTrue(accountService.isValidEmail("john@example.com"));
-        assertTrue(accountService.isValidEmail("carol@domain.com"));
+        assertTrue(accountService.isValidEmail("alice123@domain.co.uk"));
     }
 
     @Test
-    void testIsValidEmail_InvalidEmail() {
-        assertFalse(accountService.isValidEmail("bobmail.com"));
+    @DisplayName("isValidEmail returns false for invalid email")
+    void testInvalidEmail() {
+        assertFalse(accountService.isValidEmail("invalid.email"));
+        assertFalse(accountService.isValidEmail("no@domain"));
         assertFalse(accountService.isValidEmail(""));
         assertFalse(accountService.isValidEmail(null));
     }
 
-    @Test
-    void testRegisterAccount_NullUsername() {
-        assertFalse(accountService.registerAccount(null, "password", "test@example.com"));
+    @ParameterizedTest
+    @CsvFileSource(resources = "/data.csv", numLinesToSkip = 1)
+    @DisplayName("registerAccount with CSV data")
+    void testRegisterAccountWithCsv(String username, String password, String email, boolean expected) {
+        boolean result = accountService.registerAccount(username, password, email);
+        assertEquals(expected, result,
+                String.format("Registration should %s for username=%s, password=%s, email=%s",
+                        expected ? "succeed" : "fail", username, password, email));
     }
 
     @Test
-    void testRegisterAccount_ShortPassword() {
-        assertFalse(accountService.registerAccount("alice", "short", "alice@mail.com"));
+    @DisplayName("registerAccount fails for null username")
+    void testRegisterAccountNullUsername() {
+        assertFalse(accountService.registerAccount(null, "password123", "test@example.com"));
     }
 
     @Test
-    void testRegisterAccount_InvalidEmail() {
-        assertFalse(accountService.registerAccount("bob", "password", "bobmail.com"));
+    @DisplayName("registerAccount fails for empty username")
+    void testRegisterAccountEmptyUsername() {
+        assertFalse(accountService.registerAccount("", "password123", "test@example.com"));
+    }
+
+    @Test
+    @DisplayName("registerAccount fails for short password")
+    void testRegisterAccountShortPassword() {
+        assertFalse(accountService.registerAccount("testuser", "short", "test@example.com"));
+    }
+
+    @Test
+    @DisplayName("registerAccount fails for null password")
+    void testRegisterAccountNullPassword() {
+        assertFalse(accountService.registerAccount("testuser", null, "test@example.com"));
+    }
+
+    @Test
+    @DisplayName("registerAccount fails for invalid email")
+    void testRegisterAccountInvalidEmail() {
+        assertFalse(accountService.registerAccount("testuser", "password123", "invalid.email"));
     }
 }

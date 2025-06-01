@@ -1,12 +1,8 @@
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvFileSource;
-import static org.junit.jupiter.api.Assertions.*;
+package bao.example;
 
-class AccountService {
+public class AccountService {
     public boolean registerAccount(String username, String password, String email) {
-        if (username == null || username.trim().isEmpty()) {
+        if (username == null || username.isEmpty()) {
             return false;
         }
         if (password == null || password.length() <= 6) {
@@ -19,10 +15,11 @@ class AccountService {
     }
 
     public boolean isValidEmail(String email) {
-        if (email == null || email.trim().isEmpty()) {
+        if (email == null || email.isEmpty()) {
             return false;
         }
-        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+        // Basic email regex: requires at least one character before @, @, and a domain with a dot
+        String emailRegex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
         return email.matches(emailRegex);
     }
 }
