@@ -32,6 +32,7 @@ class AccountServiceTest {
         assertFalse(accountService.isValidEmail(null));
     }
 
+
     @ParameterizedTest
     @CsvFileSource(resources = "/data.csv", numLinesToSkip = 1)
     @DisplayName("registerAccount with CSV data")
