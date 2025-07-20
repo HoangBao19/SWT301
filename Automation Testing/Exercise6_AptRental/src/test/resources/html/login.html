@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Page</title>
+</head>
+<body>
+<h2>Login</h2>
+<form>
+    <input type="email" name="email" placeholder="Email" /><br />
+    <input type="password" name="password" placeholder="Password" /><br />
+    <button type="submit">Login</button>
+</form>
+
+<!-- ✅ Success message -->
+<div id="success-msg" style="display: none;">Login successful</div>
+
+<!-- ❌ Error message -->
+<div id="error-msg" style="display: none;">Login failed</div>
+
+<script>
+    const form = document.querySelector("form");
+    const success = document.getElementById("success-msg");
+    const error = document.getElementById("error-msg");
+
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const email = form.email.value;
+        const password = form.password.value;
+
+        // Mock login logic
+        if ((email === "user@example.com" && password === "123456") ||
+            (email === "test@gmail.com" && password === "admin123")) {
+            success.style.display = "block";
+            error.style.display = "none";
+        } else {
+            success.style.display = "none";
+            error.style.display = "block";
+        }
+    });
+</script>
+</body>
+</html>

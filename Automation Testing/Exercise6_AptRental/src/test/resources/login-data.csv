@@ -1,0 +1,5 @@
+email,password,expectedResult
+user@example.com,123456,success
+admin@example.com,wrongpass,failure
+test@gmail.com,admin123,success
+fakeuser@xyz.com,invalid,failure
